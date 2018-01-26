@@ -29,8 +29,8 @@
 		:host([vertical]) .badge-wrapper::after,
 		:host([vertical]) .badge-wrapper::before {
 			min-height: 8px;
-			width: 1px;
-			background: var(--fluido-label-divider-color, var(--divider-color, black));
+			min-width: 1px;
+			background: var(--fluido-label-divider-color, var(--divider-color, #dbdbdb));
 			@apply --layout-flex;
 			content: '';
 			flex-grow: 1;
@@ -64,7 +64,7 @@
 		:host(:not([vertical])) .main-label::before {
 			height: 1px;
 			min-width: 16px;
-			background: var(--fluido-label-divider-color, var(--divider-color, black));
+			background: var(--fluido-label-divider-color, var(--divider-color, #dbdbdb));
 			@apply --layout-flex;
 			content: '';
 			flex-grow: 1;
@@ -83,7 +83,7 @@
 			margin: 8px 0;
 			width: 24px;
 			height: 24px;
-			background: var(--badge-inactive-color, var(--paper-grey-300, grey));
+			background: var(--badge-inactive-color, var(--paper-grey-500, #9e9e9e));
 			border-radius: 50%;
 			color: var(--label-color, white);
 			font-size: 12px;
@@ -101,13 +101,12 @@
 			@apply --layout;
 			@apply --layout-vertical;
 			padding: 0 8px;
-			min-width: 64px;
 			overflow: hidden;
 		}
 
 		.text-label {
 			@apply --paper-font-body2;
-			color: var(--primary-text-color, grey);
+			color: var(--primary-text-color, #212121);
 			height: 16px;
 			line-height: 16px;
 			font-weight: 400;
@@ -115,7 +114,7 @@
 
 		.text-label-secondary {
 			@apply --paper-font-caption;
-			color: var(--secondary-text-color, grey);
+			color: var(--secondary-text-color, #737373);
 			height: 14px;
 			line-height: 14px;
 			font-weight: 400;
@@ -125,22 +124,21 @@
 		/* ESTILOS DE ESTADO */
 
 		:host([state-editable]) .text-label,
-		:host([state-completed]) .text-label,
-		:host([state-error]) .text-label {
+		:host([state-completed]) .text-label {
 			font-weight: 400;
 		}
 
-		:host([state-active]) .text-label {
+		:host([state-active]) .text-label,
+		:host([state-error]) .text-label {
 			font-weight: 500;
 		}
-
 
 		:host([state-error]) .main-label * {
 			color: var(--paper-red-a400, red) !important;
 		}
 
 		.badge[colored] {
-			background: var(--badge-active-color, var(--accent-color, blue));
+			background: var(--badge-active-color, var(--accent-color, #25a2b1));
 		}
 
 		:host([state-error]) .main-label .badge {
