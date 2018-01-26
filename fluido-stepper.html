@@ -1,0 +1,157 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../iron-collapse/iron-collapse.html">
+
+<link rel="import" href="fluido-step-label.html">
+<link rel="import" href="fluido-step.html">
+
+<dom-module id="fluido-stepper">
+	<template>
+		<style>
+			:host {
+				width: 100%;
+			}
+
+			.headers {
+				width: 100%;
+				@apply --layout;
+				@apply --layout-horizontal;
+			}
+
+			.headers > * {
+				flex-grow: 1;
+			}
+
+			.container-wrapper {
+				width: 100%;
+				overflow: hidden;
+				@apply --layout;
+				@apply --layout-vertical;
+			}
+
+			#container {
+				width: 100%;
+				transition: transform .3s ease-in-out;
+				@apply --layout;
+				@apply --layout-horizontal;
+			}
+
+			:host([vertical]) #container{
+				@apply --layout-vertical;
+			}
+		</style>
+
+		<template is="dom-if" if="[[!vertical]]">
+			<div class="headers">
+				<template is="dom-repeat" items="{{_listSteps}}" as="step">
+					<fluido-step-label
+						title="[[step.title]]"
+						subtitle="[[step.subtitle]]"
+						index="[[step._index]]"
+						current-index="[[step._currentIndex]]"
+						state="{{step._state}}"
+						template-title="[[step.templateTitle]]"
+						on-click="_attackHeader">
+					</fluido-step-label>
+				</template>
+			</div>
+		</template>
+		<div class="container-wrapper">
+			<iron-collapse opened="[[_isStarted]]">
+				<div id="container">
+					<slot></slot>
+				</div>
+			</iron-collapse>
+		</div>
+	</template>
+
+	<script>
+		class FluidoStepper extends Polymer.Element {
+			static get is() {
+				return "fluido-stepper"
+			}
+
+			static get properties() {
+				return {
+					vertical: {
+						type: Boolean,
+						value: false,
+						reflectToAttribute: true
+					},
+					autostart: {
+						type: Boolean,
+						value: false
+					},
+					_isStarted: {
+						type: Boolean,
+						value: false
+					},
+					_listSteps: {
+						type: Array,
+						value() {return []}
+					}
+				}
+			}
+
+			ready() {
+				super.ready()
+				this._isStarted = this.vertical
+			}
+
+			_attackHeader(ev) {
+				let canMove = ev.model.step.attackHeader()
+
+				if(!this.vertical && canMove) {
+					this._currentIndex = ev.model.step._index
+				}
+			}
+
+			set _currentIndex(i) {
+				if(!this.vertical) {
+					let val = 100/this._listSteps.length;
+					this.$.container.style.transform = `translate3d(-${val*(i-1)}%, 0, 0)`
+				}
+			}
+
+			connectedCallback() {
+				super.connectedCallback();
+				this._observer = new Polymer.FlattenedNodesObserver(this, info => {
+					info.addedNodes.forEach(e => {
+						if(e.tagName && e.tagName.toLowerCase() == "fluido-step") {
+							this._listSteps.push(e)
+						}
+					})
+					this._prepareSteps()
+				})
+			}
+
+			disconnectedCallback() {
+				super.disconnectedCallback()
+				this._observer.disconnect()
+			}
+
+			_prepareSteps() {
+				this._listSteps.forEach((e, i) => {
+					e._index = i+1
+					e._vertical = this.vertical
+					e._stepper = this
+					if(i > 0) e.beforeStep = this._listSteps[i-1]
+					if(i < this._listSteps.length -1) e.afterStep = this._listSteps[i+1]
+				})
+				let canMove = false
+				if(this._listSteps[0] && this.autostart) {
+					canMove = this._listSteps[0].attackHeader()
+				}
+
+				if(!this.vertical) {
+					this.$.container.style.width = `${100*this._listSteps.length}%`
+					if(canMove) {
+						this._currentIndex = 1
+					}
+				}
+			}
+		}
+
+		window.customElements.define(FluidoStepper.is, FluidoStepper)
+	</script>
+</dom-module>

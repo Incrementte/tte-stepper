@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+	<title>fluido-stepper demo</title>
+
+	<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+	<link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+	<link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+	<link rel="import" href="../fluido-stepper.html">
+
+	<custom-style>
+	<style is="custom-style" include="demo-pages-shared-styles">
+	</style>
+	</custom-style>
+</head>
+<body>
+	<div class="vertical-section-container centered">
+	<h3>Basic fluido-stepper demo</h3>
+	<demo-snippet>
+		<template>
+		<fluido-stepper>
+			<fluido-step optional editable><h3>content 1</h3></fluido-step>
+			<fluido-step optional editable><h3>content 2</h3></fluido-step>
+			<fluido-step optional editable><h3>content 3</h3></fluido-step>
+			<fluido-step optional editable><h3>content 4</h3></fluido-step>
+		</fluido-stepper>
+		<fluido-stepper vertical>
+			<fluido-step optional editable><h3>content 1</h3></fluido-step>
+			<fluido-step optional editable><h3>content 2</h3></fluido-step>
+			<fluido-step optional editable><h3>content 3</h3></fluido-step>
+			<fluido-step optional editable><h3>content 4</h3></fluido-step>
+		</fluido-stepper>
+		</template>
+	</demo-snippet>
+	</div>
+</body>
+</html>
