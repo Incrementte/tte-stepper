@@ -1,6 +1,6 @@
 {
   "name": "fluido-stepper",
-  "version": "1.0.0",
+  "version": "0.1.4",
   "description": "a stepper component",
   "main": "fluido-stepper.html",
   "dependencies": {
