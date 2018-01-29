@@ -125,10 +125,6 @@
 						type: Boolean,
 						value: false
 					},
-					_isCompleted: {
-						type: Boolean,
-						computed: "_computeIsCompleted(_state)"
-					},
 					editable: {
 						type: Boolean,
 						value: false
@@ -164,11 +160,23 @@
 				}
 			}
 
-			start() {
-				if(this._isFirst || (!this._isFirst && (this.beforeStep._state.completed || this.beforeStep.optional))) {
-					if(this._stepper) this._stepper.set("_isStarted", true)
-					this._show()
-					return true
+			start(withCompleted) {
+				if(!withCompleted || (withCompleted && !this._state.completed)) {
+					switch(true) {
+						case this._isFirst && (!this._state.completed || this.editable):
+						case !this._isFirst && (this.beforeStep._state.completed || this.beforeStep.optional) && (!this._state.completed || this.editable):
+						this._show()
+						return true
+						default:
+						return false
+					}
+				} else if(withCompleted) {
+					if (!this._isLast) {
+						this.afterStep.start(true)
+					} else {
+						this._hide(this._index, "left")
+						this._hide(this._index, "right")
+					}
 				}
 				return false
 			}
@@ -185,9 +193,10 @@
 				}
 
 				if (!this._isLast) {
-					this.afterStep.start()
+					this.afterStep.start(true)
 				} else {
-					this._hide(this._index)
+					this._hide(this._index, "left")
+					this._hide(this._index, "right")
 				}
 			}
 
@@ -200,7 +209,7 @@
 			}
 
 			_hide(currentIndex, chain) { // fecha o iron collapse
-				this._currentIndex = currentIndex
+				this.set("_currentIndex", currentIndex)
 				this._setStateActive(false)
 				switch(chain) {
 					case "right":
@@ -213,7 +222,7 @@
 			}
 
 			_show() { // abre o iron collapse e atualiza o indice
-				this._currentIndex = this._index
+				this.set("_currentIndex", this._index)
 
 				if(this.afterStep) this.afterStep._hide(this._index, "right")
 				if(this.beforeStep) this.beforeStep._hide(this._index, "left")
@@ -235,10 +244,6 @@
 					return true
 				}
 				return false
-			}
-
-			_computeIsCompleted(state) {
-				return state.editable || state.completed || state.error
 			}
 
 			_updateIndex() {
