@@ -222,12 +222,12 @@
 					_isColored: {
 						type: Boolean,
 						value: false,
-						computed: "_computeHasColored(index, currentIndex)"
+						computed: "_computeHasColored(index, currentIndex, stateCompleted, stateError)"
 					},
 					_isClosed: {
 						type: Boolean,
 						value: false,
-						computed: "_computeHasClosed(state)"
+						computed: "_computeHasClosed(stateEditable, stateCompleted, stateError)"
 					},
 					templateTitle: {
 						type: String
@@ -281,15 +281,15 @@
 				return false
 			}
 
-			_computeHasColored(index, currentIndex) {
-				return currentIndex >= index
+			_computeHasColored(index, currentIndex, completed, error) {
+				return currentIndex >= index && (completed || error)
 			}
 
-			_computeHasClosed(state) {
+			_computeHasClosed(editable, completed, error) {
 				switch(true) {
-					case state.editable:
-					case state.completed:
-					case state.error:
+					case editable:
+					case completed:
+					case error:
 					return true
 					default:
 					return false

@@ -165,7 +165,7 @@
 			}
 
 			start() {
-				if(this._isFirst || (!this._isFirst && (this.beforeStep._isCompleted || this.beforeStep.optional))) {
+				if(this._isFirst || (!this._isFirst && (this.beforeStep._state.completed || this.beforeStep.optional))) {
 					if(this._stepper) this._stepper.set("_isStarted", true)
 					this._show()
 					return true
@@ -174,13 +174,16 @@
 			}
 
 			finish(hasError = false) {
-				if(this.editable && !hasError) {
+				if(this.editable) {
 					this.set("_state.editable", true)
-				} else if (!hasError) {
+				}
+
+				if (!hasError) {
 					this.set("_state.completed", true)
 				} else {
 					this.set("_state.error", true)
 				}
+
 				if (!this._isLast) {
 					this.afterStep.start()
 				} else {
