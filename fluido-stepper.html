@@ -99,6 +99,15 @@
 				this._isStarted = this.vertical
 			}
 
+			restart() {
+				this._listSteps.forEach((e, i) => {
+					e.restart()
+				})
+
+				this._autostartConfig()
+				this._fixWidthContent()
+			}
+
 			_attackHeader(ev) {
 				let canMove = ev.model.step.attackHeader()
 
@@ -139,11 +148,18 @@
 					if(i > 0) e.beforeStep = this._listSteps[i-1]
 					if(i < this._listSteps.length -1) e.afterStep = this._listSteps[i+1]
 				})
+				this._autostartConfig()
+				this._fixWidthContent()
+			}
+
+			_autostartConfig() {
 				let canMove = false
 				if(this._listSteps[0] && this.autostart) {
 					canMove = this._listSteps[0].attackHeader()
 				}
+			}
 
+			_fixWidthContent() {
 				if(!this.vertical) {
 					this.$.container.style.width = `${100*this._listSteps.length}%`
 					if(canMove) {

@@ -222,7 +222,7 @@
 					_isColored: {
 						type: Boolean,
 						value: false,
-						computed: "_computeHasColored(index, currentIndex, stateCompleted, stateError)"
+						computed: "_computeHasColored(index, currentIndex, stateActive, stateCompleted, stateError)"
 					},
 					_isClosed: {
 						type: Boolean,
@@ -281,8 +281,8 @@
 				return false
 			}
 
-			_computeHasColored(index, currentIndex, completed, error) {
-				return currentIndex >= index && (completed || error)
+			_computeHasColored(index, currentIndex, active, completed, error) {
+				return currentIndex >= index && (active || completed || error)
 			}
 
 			_computeHasClosed(editable, completed, error) {

@@ -161,6 +161,15 @@
 				}
 			}
 
+			restart() {
+				this._state = {
+					active: false,
+					editable: false,
+					error: false,
+					completed: false
+				}
+			}
+
 			start(withCompleted) {
 				if(!withCompleted || (withCompleted && !this._state.completed)) {
 					switch(true) {
