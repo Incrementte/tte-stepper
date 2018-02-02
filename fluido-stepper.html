@@ -43,14 +43,14 @@
 
 		<template is="dom-if" if="[[!vertical]]">
 			<div class="headers">
-				<template is="dom-repeat" items="{{_listSteps}}" as="step">
+				<template is="dom-repeat" items="[[_listSteps]]" as="step">
 					<fluido-step-label
 						tabindex="0"
 						title="[[step.title]]"
 						subtitle="[[step.subtitle]]"
 						index="[[step._index]]"
 						current-index="[[step._currentIndex]]"
-						state="{{step._state}}"
+						state="[[step._state]]"
 						template-title="[[step.templateTitle]]"
 						on-click="_attackHeader">
 					</fluido-step-label>
@@ -58,7 +58,7 @@
 			</div>
 		</template>
 		<div class="container-wrapper">
-			<iron-collapse opened="[[_isStarted]]">
+			<iron-collapse opened="[[_isOpen]]">
 				<div id="container">
 					<slot></slot>
 				</div>
@@ -83,12 +83,13 @@
 						type: Boolean,
 						value: false
 					},
-					_isStarted: {
+					_isOpen: {
 						type: Boolean,
 						value: false
 					},
 					_listSteps: {
 						type: Array,
+						notify: true,
 						value() {return []}
 					}
 				}
@@ -96,7 +97,7 @@
 
 			ready() {
 				super.ready()
-				this._isStarted = this.vertical
+				this._isOpen = this.vertical
 			}
 
 			restart() {
@@ -104,8 +105,7 @@
 					e.restart()
 				})
 
-				this._autostartConfig()
-				this._fixWidthContent()
+				this._fixWidthContent(this._autostartConfig())
 			}
 
 			_attackHeader(ev) {
@@ -128,7 +128,7 @@
 				this._observer = new Polymer.FlattenedNodesObserver(this, info => {
 					info.addedNodes.forEach(e => {
 						if(e.tagName && e.tagName.toLowerCase() == "fluido-step") {
-							this._listSteps.push(e)
+							this.push("_listSteps", e)
 						}
 					})
 					this._prepareSteps()
@@ -148,8 +148,8 @@
 					if(i > 0) e.beforeStep = this._listSteps[i-1]
 					if(i < this._listSteps.length -1) e.afterStep = this._listSteps[i+1]
 				})
-				this._autostartConfig()
-				this._fixWidthContent()
+
+				this._fixWidthContent(this._autostartConfig())
 			}
 
 			_autostartConfig() {
@@ -157,9 +157,10 @@
 				if(this._listSteps[0] && this.autostart) {
 					canMove = this._listSteps[0].attackHeader()
 				}
+				return canMove
 			}
 
-			_fixWidthContent() {
+			_fixWidthContent(canMove) {
 				if(!this.vertical) {
 					this.$.container.style.width = `${100*this._listSteps.length}%`
 					if(canMove) {

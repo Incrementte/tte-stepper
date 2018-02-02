@@ -42,14 +42,14 @@
 				subtitle="[[subtitle]]"
 				index="[[_index]]"
 				current-index="[[_currentIndex]]"
-				state="{{_state}}"
+				state="[[_state]]"
 				template-title="[[templateTitle]]"
 				on-click="attackHeader">
 			</fluido-step-label>
 		</template>
 		<div class="content-wrapper" left-line$="[[_vertical]]" last$="[[_isLast]]">
 			<div class="content">
-				<iron-collapse opened="{{_computeCollapse(_isOpen,_vertical)}}">
+				<iron-collapse opened="[[_computeCollapse(_isOpen, _vertical)]]">
 					<slot></slot>
 				</iron-collapse>
 			</div>
@@ -177,8 +177,6 @@
 						case !this._isFirst && (this.beforeStep._state.completed || this.beforeStep.optional) && (!this._state.completed || this.editable):
 						this._show()
 						return true
-						default:
-						return false
 					}
 				} else if(withCompleted) {
 					if (!this._isLast) {
@@ -186,6 +184,7 @@
 					} else {
 						this._hide(this._index, "left")
 						this._hide(this._index, "right")
+						this._setStateStepperOpen(false)
 					}
 				}
 				return false
@@ -207,6 +206,7 @@
 				} else {
 					this._hide(this._index, "left")
 					this._hide(this._index, "right")
+					this._setStateStepperOpen(false)
 				}
 			}
 
@@ -233,6 +233,7 @@
 
 			_show() { // abre o iron collapse e atualiza o indice
 				this.set("_currentIndex", this._index)
+				this._setStateStepperOpen(true)
 
 				if(this.afterStep) this.afterStep._hide(this._index, "right")
 				if(this.beforeStep) this.beforeStep._hide(this._index, "left")
@@ -264,7 +265,10 @@
 			}
 
 			_updateState(state) {
-				if(this._stepper) this._stepper.notifyPath(`_listSteps.${this._index-1}._state.${state}`)
+				if(this._stepper) {
+					this._stepper.notifyPath(`_listSteps.${this._index-1}._state.${state}`)
+					this._stepper.notifyPath(`_listSteps.${this._index-1}._state`)
+				}
 			}
 
 			_updateTemplateTitle() {
@@ -279,25 +283,29 @@
 				if(this._stepper) this._stepper.notifyPath(`_listSteps.${this._index-1}.subtitle`)
 			}
 
+			_setStateStepperOpen(b) {
+				if(this._stepper) this._stepper.set("_isOpen", this._vertical ? true : b)
+			}
+
 			_setStateActive(b) {
 				this.set("_state.active", b)
 				this.set("_isOpen", b)
-				this._updateState("active")
+				this._updateState("active", b)
 			}
 
 			_setStateEditable(b) {
 				this.set("_state.editable", b)
-				this._updateState("editable")
+				this._updateState("editable", b)
 			}
 
 			_setStateCompleted(b) {
 				this.set("_state.completed", b)
-				this._updateState("completed")
+				this._updateState("completed", b)
 			}
 
 			_setStateError(b) {
 				this.set("_state.error", b)
-				this._updateState("error")
+				this._updateState("error", b)
 			}
 		}
 
