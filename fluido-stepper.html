@@ -37,14 +37,14 @@
 			}
 
 			:host(:not([vertical])) ::slotted(*) {
-				padding: 1.5rem;
-				padding-right: 0;
+				padding: 0 0 1.5rem 1.5rem;
 				box-sizing: border-box;
 				overflow: hidden;
 			}
 
 			:host([vertical]) #container{
 				@apply --layout-vertical;
+				padding-bottom: 1.5rem;
 			}
 		</style>
 

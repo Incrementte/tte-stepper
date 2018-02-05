@@ -16,20 +16,25 @@
 				@apply --layout;
 				@apply --layout-horizontal;
 				overflow: hidden;
+				/* padding-right: 1.5rem;
+				box-sizing: border-box; */
 			}
-
-			:host(:not([_vertical])) .content-wrapper {
-				padding-right: 1.5rem;
+			.content-line[left-line] {
+				display: flex;
+				min-width: 24px;
+				width: 24px;
+				padding-right: 12px;
+				padding-left: 24px;
+				position: relative;
+				justify-content: center;
 			}
-
-			.content-wrapper[left-line]::before {
+			.content-line[left-line]::before {
 				min-width: 1px;
-				margin: 0 23px 0 36px;
 				background: var(--fluido-label-divider-color, var(--divider-color, #dbdbdb));
 				content: '';
 			}
-			.content-wrapper[last]::before {
-				opacity: 0;
+			.content-line[last]::before {
+				display: none;
 			}
 			.content {
 				flex-grow: 1;
@@ -52,7 +57,8 @@
 			</fluido-step-label>
 		</template>
 		<iron-collapse opened="[[_computeCollapse(_isOpen, _vertical)]]">
-			<div class="content-wrapper" left-line$="[[_vertical]]" last$="[[_isLast]]">
+			<div class="content-wrapper">
+				<div class="content-line" left-line$="[[_vertical]]" last$="[[_isLast]]"></div>
 				<div class="content">
 					<slot></slot>
 				</div>
