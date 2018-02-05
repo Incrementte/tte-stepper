@@ -100,7 +100,7 @@
 		.text-wrapper {
 			@apply --layout;
 			@apply --layout-vertical;
-			padding: 0 8px;
+			padding: 0 12px;
 			overflow: hidden;
 		}
 
@@ -153,7 +153,7 @@
 		</style>
 
 		<paper-ripple></paper-ripple>
-		<div class="main-label">
+		<div class="main-label" role="button" tabindex="0">
 			<div class="badge-wrapper">
 				<div class="badge" colored$="[[_isColored]]">
 					<template is="dom-if" if="[[_isClosed]]">

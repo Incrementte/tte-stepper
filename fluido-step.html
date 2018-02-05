@@ -15,10 +15,16 @@
 			.content-wrapper {
 				@apply --layout;
 				@apply --layout-horizontal;
+				overflow: hidden;
 			}
+
+			:host(:not([_vertical])) .content-wrapper {
+				padding-right: 1.5rem;
+			}
+
 			.content-wrapper[left-line]::before {
 				min-width: 1px;
-				margin: 0 24px 0 36px;
+				margin: 0 23px 0 36px;
 				background: var(--fluido-label-divider-color, var(--divider-color, #dbdbdb));
 				content: '';
 			}
@@ -27,14 +33,12 @@
 			}
 			.content {
 				flex-grow: 1;
-				padding-right: 1em;
 				box-sizing: border-box;
 			}
 		</style>
 
 		<template is="dom-if" if="[[_vertical]]">
 			<fluido-step-label
-				tabindex="0"
 				vertical
 				first$="[[_isFirst]]"
 				last$="[[_isLast]]"
@@ -47,13 +51,13 @@
 				on-click="attackHeader">
 			</fluido-step-label>
 		</template>
-		<div class="content-wrapper" left-line$="[[_vertical]]" last$="[[_isLast]]">
-			<div class="content">
-				<iron-collapse opened="[[_computeCollapse(_isOpen, _vertical)]]">
+		<iron-collapse opened="[[_computeCollapse(_isOpen, _vertical)]]">
+			<div class="content-wrapper" left-line$="[[_vertical]]" last$="[[_isLast]]">
+				<div class="content">
 					<slot></slot>
-				</iron-collapse>
+				</div>
 			</div>
-		</dib>
+		</iron-collapse>
 	</template>
 
 	<script>
