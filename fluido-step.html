@@ -42,7 +42,7 @@
 			}
 		</style>
 
-		<template is="dom-if" if="[[_vertical]]">
+		<iron-collapse opened="[[_vertical]]">
 			<fluido-step-label
 				vertical
 				first$="[[_isFirst]]"
@@ -55,7 +55,7 @@
 				template-title="[[templateTitle]]"
 				on-click="attackHeader">
 			</fluido-step-label>
-		</template>
+		</iron-collapse>
 		<iron-collapse opened="[[_computeCollapse(_isOpen, _vertical)]]">
 			<div class="content-wrapper">
 				<div class="content-line" left-line$="[[_vertical]]" last$="[[_isLast]]"></div>
@@ -254,14 +254,14 @@
 			}
 
 			_computeIsLast(afterStep) {
-				if(!this.afterStep) {
+				if(this.afterStep === null) {
 					return true
 				}
 				return false
 			}
 
 			_computeIsFirst(beforeStep) {
-				if(!this.beforeStep) {
+				if(this.beforeStep === null) {
 					return true
 				}
 				return false
